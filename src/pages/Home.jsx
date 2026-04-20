@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { HiLocationMarker } from "react-icons/hi";
+import { HiSearch, HiLocationMarker } from "react-icons/hi";
 import { BsBuilding, BsPeopleFill } from "react-icons/bs";
 import { MdVerified, MdSupportAgent } from "react-icons/md";
 import { FaHandshake, FaStar } from "react-icons/fa";
@@ -53,7 +53,7 @@ function SearchBar() {
                     onClick={handleSearch}
                     className="bg-[#2eac76] text-white px-6 py-2 rounded-full font-medium hover:scale-105 hover:shadow-md transition-all duration-300"
                     >
-                        Search
+                        <HiSearch size={20} />
                     </button>
                 </div>
             </div>
@@ -113,7 +113,7 @@ function Home() {
             <section
                 className="relative min-h-screen flex items-center justify-center"
                 style={{
-                    backgroundImage: 'url(/images/hero/hero1.jpg)',
+                    backgroundImage: 'url(/images/hero/hero3.jpg)',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     paddingTop: '100px',
@@ -122,7 +122,7 @@ function Home() {
                 {/* Dark Overlay */}
                 <div 
                     className="absolute inset-0"
-                    style={{ backgroundColor: 'rgba(26,58, 92, 0.60)' }} />
+                    style={{ backgroundColor: 'rgba(26,58, 92, 0.70)' }} />
 
                 <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
                     <motion.p
@@ -475,7 +475,7 @@ function Home() {
             <section
                 className="relative py-20 px-4 text-center"
                 style={{
-                    backgroundImage: 'url(/images/hero/hero1.jpg)',
+                    backgroundImage: 'url(/images/hero/hero4.jpg)',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                 }}

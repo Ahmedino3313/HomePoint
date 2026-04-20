@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@layer base {
+    html {
+        -webkit-text-size-adjust: 100%;
+    }
+}
+
 * {
     font-family: 'Inter', sans-serif;
 }

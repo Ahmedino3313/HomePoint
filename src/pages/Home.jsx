@@ -6,6 +6,8 @@ import { BsBuilding, BsPeopleFill } from "react-icons/bs";
 import { MdVerified, MdSupportAgent } from "react-icons/md";
 import { FaHandshake, FaStar } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
+import PropertyCard from '../components/PropertyCard';
+import properties from '../data/properties'
 
 function SearchBar() {
     const [query, setQuery] = useState('');
@@ -26,10 +28,10 @@ function SearchBar() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.8 }}
-            className="mt-10 flex flex-col sm:flex-row items-center gap-3 max-w-2xl mx-auto w-full px-4"
+            className="mt-10 flex flex-col sm:flex-row items-center gap-3 w-full px-4 sm:max-w-2xl sm:mx-auto"
         >
-            <div className="w-full max-w-5xl mx-auto">
-                <div className="flex items-center bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 px-4 py-2">
+            <div className="w-full">
+                <div className="flex items-center bg-white rounded-full shadow-lg hover:shadow-xl transition-all duration-300 px-3 py-2 sm:px-4">
 
                     {/* Input Section */}
                     <div className="flex items-center flex-1 gap-3 px-3">
@@ -51,8 +53,7 @@ function SearchBar() {
                     {/* Button */}
                     <button
                     onClick={handleSearch}
-                    className="bg-[#2eac76] text-white px-6 py-2 rounded-full font-medium hover:scale-105 hover:shadow-md transition-all duration-300"
-                    >
+                    className="bg-[#2eac76] text-white px-4 py-2 sm:px-6 rounded-full font-medium hover:scale-105 hover:shadow-md transition-all duration-300 cursor-pointer">
                         <HiSearch size={20} />
                     </button>
                 </div>
@@ -113,7 +114,7 @@ function Home() {
             <section
                 className="relative min-h-screen flex items-center justify-center"
                 style={{
-                    backgroundImage: 'url(/images/hero/hero3.jpg)',
+                    backgroundImage: 'url(/images/hero/hero6.jpg)',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                     paddingTop: '100px',
@@ -163,14 +164,15 @@ function Home() {
                     >
                         <Link
                             to="/properties"
-                            className="px-8 py-4 rounded-full font-semibold text-white text-lg transition-all duration-300 hover:shadow-xl hover:scale-105"
+                            className="px-5 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-white text-base sm:text-lg transition-all duration-300 hover:shadow-xl hover:scale-105"
                             style={{ backgroundColor: '#2eac76' }}
                         >
                             Browse Properties
                         </Link>
                         <Link
                             to="/agents"
-                            className="px-8 py-4 rounded-full font-semibold text-lg transition-all duration-300 hover:shadow-xl hover:scale-105 border-2 border-white text-white hover:text-white"
+                            
+                            className="px-5 py-3 sm:px-8 sm:py-4 rounded-full font-semibold text-base sm:text-lg transition-all duration-300 hover:shadow-xl hover:scale-105 border-2 border-white text-white hover:text-white"
                             style={{}}
                             onMouseEnter={(e) => {
                                 e.currentTarget.style.backgroundColor = '#2eac76';
@@ -314,42 +316,12 @@ function Home() {
 
                     {/* Placeholder Card  */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[1, 2, 3,].map((i) => (
-                            <motion.div
-                                key={i}
-                                variants={fadeUp}
-                                initial="hidden"
-                                whileInView="visible"
-                                viewport={{ Once: true }}
-                                transition={{ delay: i * 0.15 }}
-                                whileHover={{ y: -6 }}
-                                className="rounded-2xl overflow-hidden shadow-lg border border-gray-100"
-                            >
-                                <div
-                                    className="h-52 w-full"
-                                    style={{ backgroundColor: '#e8f5ee' }}
-                                />
-                                <div className="p-6">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span
-                                            className="text-xs font-semibold px-3 py-1 rounded-full"
-                                            style={{ backgroundColor: '#e8f5ee', color:'#2eac76' }}
-                                        >
-                                            1 Bedroom
-                                        </span>
-                                        <span className="font-bold text-lg" style={{ color: '#1a3a5c' }}>
-                                            $1,200/mo
-                                        </span>
-                                    </div>
-                                    <h3 className="font-bold text-lg mb-1" style={{color: '#1a3a5c' }}>
-                                        Modern Apartment {i}
-                                    </h3>
-                                    <p className="text-gray-400 text-sm flex items-center gap-1">
-                                        <HiLocationMarker style={{ color: '#2eac76' }} /> New York, NY
-                                    </p>
-                                </div>
-                            </motion.div>
-                        ))}
+                        {properties 
+                            .filter((p) => p.featured)
+                            .slice(0, 3)
+                            .map((property) => (
+                                <PropertyCard key={property.id} property={property} />
+                            ))}
                     </div>
 
                     <motion.div
@@ -475,7 +447,7 @@ function Home() {
             <section
                 className="relative py-20 px-4 text-center"
                 style={{
-                    backgroundImage: 'url(/images/hero/hero4.jpg)',
+                    backgroundImage: 'url(/images/hero/hero6.jpg)',
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                 }}

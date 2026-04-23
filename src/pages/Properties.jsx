@@ -165,7 +165,7 @@ function Properties() {
                         <button
                             key={type}
                             onClick={() => setSelectedType(type)}
-                            className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300"
+                            className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer"
                             style={
                             selectedType === type
                                 ? { backgroundColor: '#2eac76', color: 'white' }
@@ -247,7 +247,7 @@ function Properties() {
                         <button
                             onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
                             disabled={currentPage === 1}
-                            className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border"
+                            className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border cursor-pointer"
                             style={
                                 currentPage === 1
                                 ? { color: '#d1d5db', borderColor: '#e5e7eb', cursor: 'not-allowed' }
@@ -274,7 +274,7 @@ function Properties() {
                                 <button
                                     key={page}
                                     onClick={() => setCurrentPage(page)}
-                                    className="w-9 h-9 rounded-full text-sm font-medium transition-all duration-300"
+                                    className="w-9 h-9 rounded-full text-sm font-medium transition-all duration-300 cursor-pointer"
                                     style={
                                         isActive
                                         ? { backgroundColor: '#2eac76', color: 'white' }
@@ -290,7 +290,7 @@ function Properties() {
                         <button
                             onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
                             disabled={currentPage === totalPages}
-                            className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border"
+                            className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 border cursor-pointer"
                             style={
                                 currentPage === totalPages
                                 ? { color: '#d1d5db', borderColor: '#e5e7eb', cursor: 'not-allowed' }

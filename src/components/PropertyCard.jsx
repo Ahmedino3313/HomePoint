@@ -1,10 +1,59 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { HiLocationMarker, HiHeart } from 'react-icons/hi';
 import { IoBedOutline, IoWaterOutline } from 'react-icons/io5';
 import { BiArea } from 'react-icons/bi';
 import { usePropertyImages } from '../hooks/usePropertyImages';
+
+function LazyImage({src, alt }) {
+    const [loaded, setLoaded] = useState(false);
+    const [inView, setInView] =useState(false);
+    const imgRef = useRef(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                if (entry.isIntersecting) {
+                    setInView(true);
+                    observer.disconnect();
+                }
+            },
+            { threshold: 0.1 }
+        );
+        if (imgRef.current) observer.observe(imgRef.current);
+        return () => observer.disconnect();
+    }, []);
+
+    return (
+        <div ref={imgRef} className="w-full h-full relative overflow-hidden">
+            {/* Blur Placeholder */}
+            <div
+                className={`absolute inset-0 transition-opacity duration-700 
+                    ${loaded ? 'opacity-0' : 'opacity-100' }`}
+                style={{
+                    backgroundImage: inView && src ? `url(${src})` : 'none',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    filter: 'blur(20px)',
+                    transform: 'scale(1.1)',
+                    backgroundColor: '#e8f5ee',
+                }}
+            />
+            {/* Real Image */}
+            {inView && (
+                <img
+                    src={src}
+                    alt={alt}
+                    onLoad={() => setLoaded(true)}
+                    className={`w-full h-full object-cover transition-all duration-700 hover:scale-110 ${
+                        loaded ? 'opacity-100 blur-0' : 'opacity-0 blur-sm'
+                    }`}
+                />
+            )}
+        </div>
+    );
+}
 
 function PropertyCard({ property }) {
     const { images, loading } = usePropertyImages(property.type, property.id, property.city, property.state);
@@ -26,19 +75,18 @@ function PropertyCard({ property }) {
             transition={{ duration: 0.5 }}
             whileHover={{ y: -6 }}
             className="bg-white rounded-2xl overflow-hidden shadow-lg border border-gray-100 flex flex-col"
-    >
+        >
             {/* Image */}
             <div className="relative h-52 overflow-hidden">
-                {loading ? (
+                {loading || !images[0] ? (
                     <div
                         className="w-full h-full animate-pulse"
                         style={{ backgroundColor: '#e8f5ee' }}
                     />
                 ) : (
-                    <img
+                    <LazyImage
                         src={images[0]}
                         alt={property.title}
-                        className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
                     />
                 )}
 

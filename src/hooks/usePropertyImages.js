@@ -27,10 +27,8 @@ const interiorQueries = [
     'apartment interior wood floor design',
 ];
 
-// In-memory cache for current session
 const memoryCache = {};
 
-// Save to localStorage
 const saveToStorage = (key, urls) => {
     try {
         const stored = JSON.parse(localStorage.getItem('propertyImages') || '{}');
@@ -41,7 +39,6 @@ const saveToStorage = (key, urls) => {
     }
 };
 
-// Load from localStorage
 const loadFromStorage = (key) => {
     try {
         const stored = JSON.parse(localStorage.getItem('propertyImages') || '{}');
@@ -113,49 +110,64 @@ export function usePropertyImages(type, id, city = '') {
     useEffect(() => {
         // 1. Check memory cache first
         if (memoryCache[cacheKey]) {
-        setImages(memoryCache[cacheKey]);
-        setLoading(false);
-        return;
+            setImages(memoryCache[cacheKey]);
+            setLoading(false);
+            return;
         }
 
-        // 2. Check localStorage
-        const stored = loadFromStorage(cacheKey);
-        if (stored) {
+    // 2. Check localStorage
+    const stored = loadFromStorage(cacheKey);
+    if (stored) {
         memoryCache[cacheKey] = stored;
         setImages(stored);
         setLoading(false);
         return;
-        }
+    }
 
-        // 3. Stagger API calls based on property id
-        const delay = (id % 5) * 400;
+    // 3. Stagger API calls based on property id
+    const delay = (id % 5) * 400;
 
-        const timer = setTimeout(async () => {
+    const timer = setTimeout(async () => {
         try {
             const queryIndex = id % interiorQueries.length;
             const uniqueQuery = interiorQueries[queryIndex];
 
             let urls = [];
-            const apiChoice = id % 3;
 
+            const isLocalhost =
+            window.location.hostname === 'localhost' ||
+            window.location.hostname === '127.0.0.1';
+
+            const apiChoice = id % (isLocalhost ? 2 : 3);
+
+            if (isLocalhost) {
             if (apiChoice === 0) {
-            try { urls = await fetchFromUnsplash(uniqueQuery); }
-            catch {
-                try { urls = await fetchFromPexels(uniqueQuery); }
-                catch { urls = await fetchFromPixabay(uniqueQuery); }
-            }
-            } else if (apiChoice === 1) {
-            try { urls = await fetchFromPexels(uniqueQuery); }
-            catch {
                 try { urls = await fetchFromUnsplash(uniqueQuery); }
                 catch { urls = await fetchFromPixabay(uniqueQuery); }
+            } else {
+                try { urls = await fetchFromPixabay(uniqueQuery); }
+                catch { urls = await fetchFromUnsplash(uniqueQuery); }
             }
             } else {
-            try { urls = await fetchFromPixabay(uniqueQuery); }
-            catch {
-                try { urls = await fetchFromUnsplash(uniqueQuery); }
-                catch { urls = await fetchFromPexels(uniqueQuery); }
-            }
+                if (apiChoice === 0) {
+                    try { urls = await fetchFromUnsplash(uniqueQuery); }
+                    catch {
+                        try { urls = await fetchFromPexels(uniqueQuery); }
+                        catch { urls = await fetchFromPixabay(uniqueQuery); }
+                    }
+                } else if (apiChoice === 1) {
+                    try { urls = await fetchFromPexels(uniqueQuery); }
+                    catch {
+                        try { urls = await fetchFromUnsplash(uniqueQuery); }
+                        catch { urls = await fetchFromPixabay(uniqueQuery); }
+                    }
+                } else {
+                    try { urls = await fetchFromPixabay(uniqueQuery); }
+                    catch {
+                        try { urls = await fetchFromUnsplash(uniqueQuery); }
+                        catch { urls = await fetchFromPexels(uniqueQuery); }
+                    }
+                }
             }
 
             const offset = (id * 3) % Math.max(urls.length, 1);
@@ -174,9 +186,10 @@ export function usePropertyImages(type, id, city = '') {
         } finally {
             setLoading(false);
         }
-        }, delay);
+    }, delay);
 
-        return () => clearTimeout(timer);
+    return () => clearTimeout(timer);
+
     }, [cacheKey]);
 
     return { images, loading };

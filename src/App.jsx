@@ -8,10 +8,12 @@ import Agents from './pages/Agents';
 import AgentDetail from './pages/AgentDetail';
 import AdminDashboard from './pages/AdminDashboard';
 import Contact from './pages/Contact';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />

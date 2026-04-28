@@ -19,7 +19,7 @@ function Footer() {
                     <div>
                         <Link to="/" className="flex items-center gap-3 mb-4">
                             <img 
-                                src="/logo1.PNG"
+                                src="/logo.png"
                                 alt="HomePoint Properties"
                                 className="h-12 w-12 object-contain rounded-full" 
                             />

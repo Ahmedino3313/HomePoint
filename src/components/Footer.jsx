@@ -108,7 +108,7 @@ function Footer() {
                             <li className="flex items-start gap-3">
                                 <HiLocationMarker size={18} style={{ color: '#2eac76' }} className="mt-0.5 shrink-0" />
                                 <span className="text-gray-400 text-sm">
-                                    1234 Property Lane, Suite 100 <br /> New York, NY 10001
+                                    823 2nd Avenue <br /> New York, NY 10035
                                 </span>
                             </li>
                             <li className="flex items-start gap-3">

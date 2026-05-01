@@ -101,7 +101,7 @@ function CountUp({ target, suffix = '' }) {
     return <span ref={ref}>{count}{suffix}</span>;
 }
 
-// Fade in animiation 
+// Fade in animation 
 const fadeUp = {
     hidden: {opacity: 0, y: 40 },
     visible: {opacity: 1, y: 0, transition: { duration: 0.7 } },
@@ -293,7 +293,7 @@ function Home() {
                 </div>
             </section>
 
-            {/* Fetured Properties  */}
+            {/* Featured Properties  */}
             <section className="py-20 px-4 bg-white">
                 <div className="max-w-7xl mx-auto">
                     <motion.div

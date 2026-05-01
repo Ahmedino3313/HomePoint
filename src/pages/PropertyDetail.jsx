@@ -410,7 +410,7 @@ function PropertyDetail() {
                                         >
                                             <HiMail style={{ color: '#2d7dd2' }} size={18} />
                                             <span
-                                                className="text-sm font-medium truncate"
+                                                className="text-sm font-medium break-all"
                                                 style={{ color: '#1a3a5c' }}
                                             >
                                                 {agent.email}

@@ -26,6 +26,10 @@ function Properties() {
         setCurrentPage(1);
     }, [search, selectedState, selectedType, sortBy]);
 
+    useEffect(() => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, [currentPage]);
+
   // Combine hardcoded + admin uploaded properties
     const adminProperties = useMemo (() => {
         try {

@@ -9,6 +9,7 @@ import AgentDetail from './pages/AgentDetail';
 import AdminDashboard from './pages/AdminDashboard';
 import Contact from './pages/Contact';
 import ScrollToTop from './components/ScrollToTop';
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route path="/agents/:id" element={<AgentDetail />} />
         <Route path="/admin" element={<AdminDashboard />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />
     </BrowserRouter>

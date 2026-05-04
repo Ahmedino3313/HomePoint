@@ -4,6 +4,7 @@ import { HiPlus, HiTrash, HiEye, HiEyeOff, HiLogout, HiHome, HiArrowLeft } from 
 import { BsBuilding } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import agents from '../data/agents';
+import { supabase } from '../lib/supabase'
 
 const fadeUp = {
     hidden: { opacity: 0, y: 30 },
@@ -52,9 +53,11 @@ function AdminDashboard() {
     const [showForm, setShowForm] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [successMsg, setSuccessMsg] = useState('');
-    const [images, setImages] = useState([]);
+    const [imageFiles, setImageFiles] = useState([]);
     const [imagePreviews, setImagePreviews] = useState([]);
     const [showPassword, setShowPassword] = useState(false)
+    const [errorMsg, setErrorMsg] = useState('');
+    const [loadingProperties, setLoadingProperties] = useState(true);
 
     const [form, setForm] = useState({
         title: '',
@@ -73,10 +76,29 @@ function AdminDashboard() {
         available: true,
     });
 
+    // Fetch properties from Supabase
+    const fetchProperties = async () => {
+        setLoadingProperties(true);
+        try {
+            const { data, error } = await supabase 
+            .from('properties')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            setProperties(data || []);
+        } catch (err) {
+            console.error('Fetch error:', err);
+        } finally {
+            setLoadingProperties(false);
+        }
+    };
+
     useEffect(() => {
-        const stored = JSON.parse(localStorage.getItem('adminProperties') || '[]');
-        setProperties(stored);
-    }, []);
+        if (authenticated) {
+            fetchProperties();
+        }
+    }, [authenticated]);
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -97,73 +119,132 @@ function AdminDashboard() {
             ...(name === 'type' && {
                 bedrooms: value === 'Studio' ? 0 : value === '1 Bedroom' ? 1 : 2,
             }),
-            ...(name === 'state' && {
-                stateCode: STATE_CODES[value],
-            }),
         }));
     };
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files).slice(0, 5);
-        setImages(files);
+        setImageFiles(files);
         const previews = files.map((file) => URL.createObjectURL(file));
         setImagePreviews(previews);
     };
 
+    const uploadImages = async (files) => {
+        const urls = [];
+        for (const file of files) {
+            const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}-${file.name}`;
+            const { data, error } = await supabase.storage
+            .from('property-images')
+            .upload(fileName, file, {
+                cacheControl: '3600',
+                upsert: false,
+            });
+
+            if (error) {
+                console.error('Image upload error:', error);
+                continue;
+            }
+
+            if (data?.path) {
+                const { data: urlData } = supabase.storage
+                    .from('property-images')
+                    .getPublicUrl(data.path);
+
+                    urls.push(urlData.publicUrl);
+            }
+        }
+        return urls;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setErrorMsg('');
+
+        if (!form.title || !form.price || !form.address || !form.city || !form.zipCode || !form.sqft || !form.description) {
+            setErrorMsg('Please fill in all required fields.');
+            window.scrollTo({ top: 0, behavior: 'smooth' })
+            return;
+        }
+
         setUploading(true);
 
         try {
-            const imageUrls = imagePreviews.length > 0
-            ? imagePreviews
-            : [
-                'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800',
-                'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800',
-                'https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=800',
-                'https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=800',
-                'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800',
-            ];
+            // Upload images to Supabase Storage
+            let imageUrls = [];
+            if (imageFiles.length > 0) {
+                imageUrls = await uploadImages(imageFiles);
+            }
 
-            const newProperty = {
-                ...form,
-                id: Date.now(),
-                stateCode: STATE_CODES[form.state],
-                price: parseInt(form.price),
-                bedrooms: parseInt(form.bedrooms),
-                bathrooms: parseInt(form.bathrooms),
-                sqft: parseInt(form.sqft),
-                agentId: parseInt(form.agentId),
+            // Fallback images if none uploaded
+            if (imageUrls.length === 0) {
+                imageUrls = [
+                    'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800',
+                    'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800',
+                    'https://images.unsplash.com/photo-1560448204-603b3fc33ddc?w=800',
+                    'https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=800',
+                    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=800',
+                ];
+            }
+
+            // Insert Property into Supabase
+            const { error } = await supabase.from('properties').insert({
+                title: form.title,
+                type: form.type,
+                price: parseInt(form.price, 10),
+                address: form.address,
+                city: form.city,
+                state: form.state,
+                state_code: STATE_CODES[form.state],
+                zip_code: form.zipCode,
+                bedrooms: parseInt(form.bedrooms, 10),
+                bathrooms: parseInt(form.bathrooms, 10),
+                sqft: parseInt(form.sqft, 10),
+                description: form.description,
+                agent_id: parseInt(form.agentId, 10),
+                featured: form.featured,
+                available: form.available,
                 images: imageUrls,
-                postedBy: 'admin',
-            };
+                posted_by: 'admin',
+            });
 
-            const stored = JSON.parse(localStorage.getItem('adminProperties') || '[]');
-            const updated = [newProperty, ...stored];
-            localStorage.setItem('adminProperties', JSON.stringify(updated));
-            setProperties(updated);
+            if ( error ) throw error;
 
+            // Reset form
             setForm({
                 title: '', type: 'Studio', price: '', address: '', city: '',
                 state: 'Alabama', zipCode: '', bedrooms: 0, bathrooms: 1,
                 sqft: '', description: '', agentId: 1, featured: false, available: true,
             });
-            setImages([]);
+            setImageFiles([]);
             setImagePreviews([]);
             setShowForm(false);
             setSuccessMsg('Property uploaded successfully!');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             setTimeout(() => setSuccessMsg (''), 4000);
+
+            // Refresh properties list
+            fetchProperties();
         } catch (err) {
-            console.error('upload error', err);
+            console.error('Submit error:', err);
+            setErrorMsg('Something went wrong. Please try again');
+            window.scrollTo({ top: 0, behavior: 'smooth' })
         } finally {
             setUploading(false);
         }
     };
 
-    const handleDelete = (id) => {
-        const updated = properties.filter((p) => p.id !== id);
-        localStorage.setItem('adminProperties', JSON.stringify(updated));
-        setProperties(updated)
+    const handleDelete = async (id) => {
+        try {
+            const { error } = await supabase
+            .from('properties')
+            .delete()
+            .eq('id', id);
+            
+            if (error) throw error;
+            setProperties((prev) => prev.filter((p) => p.id !== id ));
+        } catch (err) {
+            console.error('Delete error:', err);
+        }
     };
 
     // Login Screen
@@ -258,14 +339,14 @@ function AdminDashboard() {
             className="min-h-screen pt-8 pb-16 px-4"
             style={{ backgroundColor: '#f8fafc' }}
         >
-            <div className="max-w-7xl mx-auto">
+            <div className="max-w-7xl mx-auto mt-24">
 
                 {/* Header */}
                 <motion.div 
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5 }}
-                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10 mt-25"
+                    className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-10"
                 >
                     <div className="flex items-center gap-4">
                         <img 
@@ -343,6 +424,17 @@ function AdminDashboard() {
                             style={{ backgroundColor: '#e8f5ee', color: '#2eac76' }}
                         >
                             ✔ {successMsg}
+                        </motion.div>
+                    )}
+                    {errorMsg && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            className="mb-6 p-4 rounded-xl text-sm font-medium flex items-center gap-2"
+                            style={{ backgroundColor: '#fef2f2', color: '#ef4444' }}
+                        >
+                            ⚠ {errorMsg}
                         </motion.div>
                     )}
                 </AnimatePresence>
@@ -612,10 +704,11 @@ function AdminDashboard() {
                                 </div>
 
                                 {/* Submit */}
-                                <button 
+                                <button
+                                    type="button"
                                     onClick={handleSubmit}
                                     disabled={uploading}
-                                    className="w-full py-4 rounded-full font-semibold text-white text-base transition-all duration-300 hover:shadow-xl hover:scale-105 disabled:opacity-70 disabled:cursor-not-allowed"
+                                    className="w-full py-4 rounded-full font-semibold text-white text-base transition-all duration-300 hover:shadow-xl hover:scale-105 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
                                     style={{ backgroundColor: '#2eac76' }}
                                 >
                                     {uploading ? 'Uploading...' : 'Upload Property'}
@@ -626,7 +719,14 @@ function AdminDashboard() {
                 </AnimatePresence>
 
                 {/* Properties List */}
-                {properties.length === 0 ? (
+                {loadingProperties ? (
+                    <div className="flex justify-center py-20">
+                        <div
+                            className="w-10 h-10 rounded-full border-4 border-t-transparent animate-spin"
+                            style={{ borderColor: '#2eac76', borderTopColor: 'transparent'}}
+                        />
+                    </div>
+                ) : properties.length === 0 ? (
                     <motion.div 
                         variants={fadeUp}
                         initial="hidden"
@@ -668,7 +768,7 @@ function AdminDashboard() {
                                             {property.title}
                                         </h3>
                                         <p className="text-gray-400 text-sm">
-                                            {property.address}, {property.city}, {property.stateCode}
+                                            {property.address}, {property.city}, {property.state_code}
                                         </p>
                                         <div className="flex items-center gap-2 mt-1">
                                             <span
@@ -706,7 +806,7 @@ function AdminDashboard() {
                                     </Link>
                                     <button
                                         onClick={() => handleDelete(property.id)}
-                                        className="flex items-center gap-1 px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 hover:scale-105"
+                                        className="flex items-center gap-1 px-4 py-2 rounded-full text-sm font-medium cursor-pointer transition-all duration-300 hover:scale-105"
                                         style={{ backgroundColor: '#fef2f2', color: '#ef4444' }}
                                     >
                                         <HiTrash size={16} /> Delete

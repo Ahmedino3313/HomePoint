@@ -668,17 +668,30 @@ function AdminDashboard() {
                                         multiple
                                         onChange={handleImageChange}
                                         className="w-full px-4 py-3 rounded-xl border border-gray-200 outline-none text-sm bg-white"
-                                        style={{ color: '#1a3a5c'}}
                                     />
                                     {imagePreviews.length > 0 && (
                                         <div className="flex gap-3 mt-3 flex-wrap">
                                             {imagePreviews.map((src, i) => (
-                                                <img 
-                                                    key={i}
-                                                    src={src}
-                                                    alt={`Preview ${i + 1}`}
-                                                    className="w-20 h-20 object-cover rounded-xl border border-gray-200"
-                                                />
+                                                <div key={i} className="relative">
+                                                    <img 
+                                                        src={src}
+                                                        alt={`Preview ${i + 1}`}
+                                                        className="w-20 h-20 object-cover rounded-xl border border-gray-200"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            const newPreviews = imagePreviews.filter((_, idx) => idx !== i);
+                                                            const newFiles = imageFiles.filter((_, idx) => idx !== i);
+                                                            setImagePreviews(newPreviews);
+                                                            setImageFiles(newFiles);
+                                                        }}
+                                                        className="absolute -top-2 -right-2 w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold shadow-md transition-all duration-300 hover:scale-110"
+                                                        style={{ backgroundColor: '#ef4444' }}
+                                                    >
+                                                        x
+                                                    </button>
+                                                </div>
                                             ))}
                                         </div>
                                     )}

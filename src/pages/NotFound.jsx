@@ -1,8 +1,14 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import SEO from '../components/SEO';
 
 function NotFound() {
     return (
+        <>
+        <SEO
+            title="Page Not Found | HomePoint Properties"
+            description="The page you're looking for doesn't exist. Browse our properties across all 50 US states."
+        />
         <div
         className="min-h-screen flex items-center justify-center px-4"
         style={{ backgroundColor: '#f8fafc' }}
@@ -46,6 +52,7 @@ function NotFound() {
             </div>
         </motion.div>
         </div>
+        </>
     );
 }
 

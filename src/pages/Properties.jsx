@@ -4,6 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { HiLocationMarker, HiSearch, HiFilter } from 'react-icons/hi';
 import PropertyCard from '../components/PropertyCard';
 import properties from '../data/properties';
+import { supabase } from '../lib/supabase';
+import SEO from '../components/SEO';
 
 const states = [...new Set(properties.map((p) => p.state))].sort();
 const types = ['All', 'Studio', '1 Bedroom', '2 Bedroom'];
@@ -31,87 +33,135 @@ function Properties() {
     }, [currentPage]);
 
   // Combine hardcoded + admin uploaded properties
-    const adminProperties = useMemo (() => {
-        try {
-            return JSON.parse(localStorage.getItem('adminProperties') || '[]');
-        } catch {
-            return [];
-        }
+    const [supabaseProperties, setSupabaseProperties] = useState([]);
+
+    useEffect(() => {
+        const fetchSupabaseProperties = async () => {
+            try {
+                const { data: supabaseData, error } = await supabase
+                    .from('properties')
+                    .select('*')
+                    .order('created_at', {ascending: false });
+                if (error) throw error;
+                // Normalize supabase snake_case to camelCase
+                const normalized = (supabaseData || []).map((p) => ({
+                    ...p,
+                    stateCode: p.state_code,
+                    zipCode: p.zip_code,
+                    agentId: p.agent_id,
+                    images: p.images || [],
+                }));
+                setSupabaseProperties(normalized);
+            } catch (err) {
+                console.error('Supabase fetch error:', err);
+            }
+        };
+        fetchSupabaseProperties();
     }, []);
 
-    const allProperties = useMemo (() => {
-        return [...properties, ...adminProperties];
-    }, [adminProperties]);
-
-    const filtered = useMemo(() => {
-        let result = [...allProperties];
-
-        if (search.trim()) {
-        const q = search.toLowerCase();
-        result = result.filter(
-            (p) =>
-            p.title.toLowerCase().includes(q) ||
-            p.city.toLowerCase().includes(q) ||
-            p.state.toLowerCase().includes(q) ||
-            p.address.toLowerCase().includes(q) ||
-            p.stateCode.toLowerCase().includes(q) ||
-            p.zipCode.includes(q)
+    // This prevents any ID collision between hardcoded and Supabase properties
+    const allProperties = useMemo(() => {
+        const hardcodedIds = new Set(properties.map((p) => String(p.id)));
+        const uniqueSupabase = supabaseProperties.filter(
+            (p) => !hardcodedIds.has(String(p.id))
         );
-        }
+        return [...properties, ...uniqueSupabase];
+    }, [supabaseProperties]);
 
-        if (selectedState !== 'All') {
+    // Search
+    const normalize = (str) => {
+    return str
+        .toLowerCase()
+        .replace(/[^a-z0-9\s]/g, "") // remove commas, symbols
+        .replace(/\s+/g, " ")        // remove extra spaces
+        .trim();
+    };
+
+    const filtered = useMemo(() => { 
+    let result = [...allProperties];
+
+    if (search.trim()) {
+        const normalizedSearch = normalize(search);
+        const words = normalizedSearch.split(" ");
+
+        result = result.filter((p) => {
+        const fullText = normalize(`
+            ${p.title || ""}
+            ${p.address || ""}
+            ${p.city || ""}
+            ${p.state || ""}
+            ${p.stateCode || ""}
+            ${p.zipCode || ""}
+        `);
+
+        // Exact phrase match (full address)
+        if (fullText.includes(normalizedSearch)) return true;
+
+        // Flexible word match (any order)
+        return words.every((word) => fullText.includes(word));
+        });
+    }
+
+    if (selectedState !== "All") {
         result = result.filter((p) => p.state === selectedState);
-        }
+    }
 
-        if (selectedType !== 'All') {
+    if (selectedType !== "All") {
         result = result.filter((p) => p.type === selectedType);
-        }
+    }
 
-        if (sortBy === 'Price: Low to High') {
-        result.sort((a, b) => a.price - b.price);
-        } else if (sortBy === 'Price: High to Low') {
-        result.sort((a, b) => b.price - a.price);
-        }
+    if (sortBy === "Price: Low to High") {
+        result = [...result].sort((a, b) => a.price - b.price);
+    } else if (sortBy === "Price: High to Low") {
+        result = [...result].sort((a, b) => b.price - a.price);
+    }
 
-        return result;
-    }, [search, selectedState, selectedType, sortBy, allProperties.length]);
+    return result;
+    }, [search, selectedState, selectedType, sortBy, allProperties]);
 
-    const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+      // page pagination
+    const totalPages = Math.max(1, Math.ceil(filtered.length / ITEMS_PER_PAGE));
 
     const paginated = useMemo(() => {
         const start = (currentPage - 1) * ITEMS_PER_PAGE;
         return filtered.slice(start, start + ITEMS_PER_PAGE);
-    }, [filtered, currentPage]);
+    }, [filtered, currentPage, ITEMS_PER_PAGE]);
     
     return (
-            <div
-                className="min-h-screen pt-24 pb-16 px-4"
-                style={{ backgroundColor: '#f8fafc' }}
-            >
-                <div className="max-w-7xl mx-auto">
+        <>
+        <SEO
+            title="Browse Properties | HomePoint Properties"
+            description="Search through hundreds of studio, one bedroom and two bedroom apartments across all 50 US states. Filter by state, type and price."
+            url="https://homepointproperties.com/properties"
+        />
+        <div
+            className="min-h-screen pt-24 pb-16 px-4"
+            style={{ backgroundColor: '#f8fafc' }}
+        >
+            <div className="max-w-7xl mx-auto">
 
-                {/* Header */}
-                <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-10"
+            {/* Header */}
+            <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="text-center mb-10"
+            >
+                <p
+                    className="text-sm font-semibold tracking-widest uppercase mb-2"
+                    style={{ color: '#2eac76' }}
                 >
-                    <p
-                        className="text-sm font-semibold tracking-widest uppercase mb-2"
-                        style={{ color: '#2eac76' }}
-                    >
-                        Browse Listings
-                    </p>
-                    <h1
-                        className="text-3xl md:text-5xl font-bold mb-4"
-                        style={{ color: '#1a3a5c' }}
-                    >
-                        Find Your Perfect Apartment
-                    </h1>
-                    <p className="text-gray-500 max-w-xl mx-auto">
-                        Explore our listings across all 50 states. Use the filters to narrow down your search.
-                    </p>
+                    Browse Listings
+                </p>
+                <h1
+                    className="text-3xl md:text-5xl font-bold mb-4"
+                    style={{ color: '#1a3a5c' }}
+                >
+                    Find Your Perfect Apartment
+                </h1>
+                <p className="text-gray-500 max-w-xl mx-auto">
+                    Explore our listings across all 50 states. Use the filters to narrow down your search.
+                </p>
                 </motion.div>
 
                 {/* Search Bar */}
@@ -307,6 +357,7 @@ function Properties() {
                 )}
             </div>
         </div>
+        </>
     );
 }
 

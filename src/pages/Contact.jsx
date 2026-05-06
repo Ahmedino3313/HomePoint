@@ -4,6 +4,7 @@ import { HiPhone, HiMail, HiLocationMarker, HiClock } from "react-icons/hi";
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 import { MdSupportAgent } from "react-icons/md";
 import emailjs from '@emailjs/browser';
+import SEO from '../components/SEO'
 
 const fadeUp = {
     hidden: { opacity: 0, y: 30 },
@@ -61,6 +62,12 @@ function Contact() {
     };
 
     return (
+        <>    
+        <SEO
+            title="Contact Us | HomePoint Properties"
+            description="Get in touch with HomePoint Properties. We're here to help you find your perfect apartment across all 50 US states."
+            url="https://homepointproperties.com/contact"
+        />
         <div 
             className="min-h-screen pt-24 pb-16 px-4"
             style={{ backgroundColor: '#f8fafc' }}
@@ -431,6 +438,7 @@ function Contact() {
                 </div>
             </div>
         </div>
+        </>
     );
 }
 

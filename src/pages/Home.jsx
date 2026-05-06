@@ -8,6 +8,7 @@ import { FaHandshake, FaStar } from "react-icons/fa";
 import { useNavigate } from 'react-router-dom';
 import PropertyCard from '../components/PropertyCard';
 import properties from '../data/properties'
+import SEO from '../components/SEO';
 
 function SearchBar() {
     const [query, setQuery] = useState('');
@@ -109,6 +110,12 @@ const fadeUp = {
 
 function Home() {
     return (
+        <>
+        <SEO
+            title="HomePoint Properties | Find a Place You'll Love"
+            description="Discover studio, one bedroom, and two bedroom apartments across all 50 US states. Trusted by thousands of families across America."
+            url="https://homepointproperties.com"
+        />
         <div className="bg-white">
             {/* Hero Section */}
             <section
@@ -481,6 +488,7 @@ function Home() {
                 </div>
             </section>
         </div>
+        </>
     );
 }
 

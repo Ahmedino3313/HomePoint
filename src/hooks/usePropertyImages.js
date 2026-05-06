@@ -108,89 +108,96 @@ export function usePropertyImages(type, id, city = '') {
     const cacheKey = `${type}-${id}-${city}`;
 
     useEffect(() => {
-        // 1. Check memory cache first
+        // if type is null skip fetching 
+        if (!type) {
+            setLoading(false);
+            return;
+        }
+
+        // Check memory cache first
         if (memoryCache[cacheKey]) {
             setImages(memoryCache[cacheKey]);
             setLoading(false);
             return;
         }
 
-    // 2. Check localStorage
-    const stored = loadFromStorage(cacheKey);
-    if (stored) {
-        memoryCache[cacheKey] = stored;
-        setImages(stored);
-        setLoading(false);
-        return;
-    }
+        // Check localStorage
+        const stored = loadFromStorage(cacheKey);
+        if (stored) {
+            memoryCache[cacheKey] = stored;
+            setImages(stored);
+            setLoading(false);
+            return;
+        }
 
-    // 3. Stagger API calls based on property id
-    const delay = (id % 5) * 400;
+        // 3. Stagger API calls based on property id
+        const delay = (id % 5) * 400;
 
-    const timer = setTimeout(async () => {
-        try {
-            const queryIndex = id % interiorQueries.length;
-            const uniqueQuery = interiorQueries[queryIndex];
+        const timer = setTimeout(async () => {
+            try {
+                const queryIndex = id % interiorQueries.length;
+                const uniqueQuery = interiorQueries[queryIndex];
 
-            let urls = [];
+                let urls = [];
 
-            const isLocalhost =
-            window.location.hostname === 'localhost' ||
-            window.location.hostname === '127.0.0.1';
+                const isLocalhost =
+                window.location.hostname === 'localhost' ||
+                window.location.hostname === '127.0.0.1';
 
-            const apiChoice = id % (isLocalhost ? 2 : 3);
+                const apiChoice = id % (isLocalhost ? 2 : 3);
 
-            if (isLocalhost) {
-            if (apiChoice === 0) {
-                try { urls = await fetchFromUnsplash(uniqueQuery); }
-                catch { urls = await fetchFromPixabay(uniqueQuery); }
-            } else {
-                try { urls = await fetchFromPixabay(uniqueQuery); }
-                catch { urls = await fetchFromUnsplash(uniqueQuery); }
-            }
-            } else {
-                if (apiChoice === 0) {
-                    try { urls = await fetchFromUnsplash(uniqueQuery); }
-                    catch {
-                        try { urls = await fetchFromPexels(uniqueQuery); }
-                        catch { urls = await fetchFromPixabay(uniqueQuery); }
-                    }
-                } else if (apiChoice === 1) {
-                    try { urls = await fetchFromPexels(uniqueQuery); }
-                    catch {
+                if (isLocalhost) {
+                    if (apiChoice === 0) {
                         try { urls = await fetchFromUnsplash(uniqueQuery); }
                         catch { urls = await fetchFromPixabay(uniqueQuery); }
+                    } else {
+                        try { urls = await fetchFromPixabay(uniqueQuery); }
+                        catch { urls = await fetchFromUnsplash(uniqueQuery); }
                     }
                 } else {
-                    try { urls = await fetchFromPixabay(uniqueQuery); }
-                    catch {
+                    if (apiChoice === 0) {
                         try { urls = await fetchFromUnsplash(uniqueQuery); }
-                        catch { urls = await fetchFromPexels(uniqueQuery); }
+                        catch {
+                            try { urls = await fetchFromPexels(uniqueQuery); }
+                            catch { urls = await fetchFromPixabay(uniqueQuery); }
+                        }
+                    } else if (apiChoice === 1) {
+                        try { urls = await fetchFromPexels(uniqueQuery); }
+                        catch {
+                            try { urls = await fetchFromUnsplash(uniqueQuery); }
+                            catch { urls = await fetchFromPixabay(uniqueQuery); }
+                        }
+                    } else {
+                        try { urls = await fetchFromPixabay(uniqueQuery); }
+                        catch {
+                            try { urls = await fetchFromUnsplash(uniqueQuery); }
+                            catch { urls = await fetchFromPexels(uniqueQuery); }
+                        }
                     }
                 }
+
+                const offset = (id * 3) % Math.max(urls.length, 1);
+                const rotated = [...urls.slice(offset), ...urls.slice(0, offset)];
+                const final = rotated.slice(0, 5);
+
+                memoryCache[cacheKey] = final;
+                saveToStorage(cacheKey, final);
+                setImages(final);
+            } catch (err) {
+                console.error('All APIs failed:', err);
+                const fallback = fallbackSets[id % fallbackSets.length];
+                memoryCache[cacheKey] = fallback;
+                saveToStorage(cacheKey, fallback);
+                setImages(fallback);
+            } finally {
+                setLoading(false);
             }
+        }, delay);
 
-            const offset = (id * 3) % Math.max(urls.length, 1);
-            const rotated = [...urls.slice(offset), ...urls.slice(0, offset)];
-            const final = rotated.slice(0, 5);
-
-            memoryCache[cacheKey] = final;
-            saveToStorage(cacheKey, final);
-            setImages(final);
-        } catch (err) {
-            console.error('All APIs failed:', err);
-            const fallback = fallbackSets[id % fallbackSets.length];
-            memoryCache[cacheKey] = fallback;
-            saveToStorage(cacheKey, fallback);
-            setImages(fallback);
-        } finally {
-            setLoading(false);
-        }
-    }, delay);
-
-    return () => clearTimeout(timer);
+        return () => clearTimeout(timer);
 
     }, [cacheKey]);
 
     return { images, loading };
+
 }

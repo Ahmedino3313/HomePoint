@@ -10,12 +10,22 @@ import properties from '../data/properties';
 import agents from '../data/agents';
 import PropertyCard from '../components/PropertyCard';
 import { usePropertyImages } from "../hooks/usePropertyImages";
+import { supabase } from "../lib/supabase";
+import SEO from '../components/SEO';
 
 // Image Slider Component
-function ImageSlider({ type, id, city }) {
-    const { images, loading } = usePropertyImages(type, id, city);
+function ImageSlider({ type, id, city, uploadedImages }) {
+    const hasUploaded = uploadedImages && uploadedImages.length > 0;
+    const { images: fetchedImages, loading: fetchLoading } = usePropertyImages(hasUploaded ? null : type, id, city);
+    const images = hasUploaded ? uploadedImages : fetchedImages;
+    const loading = hasUploaded ? false : fetchLoading
+
     const [current, setCurrent] = useState(0);
     const [direction, setDirection] = useState(1);
+
+        useEffect(() => {
+            setCurrent(0);
+        }, [images]);
 
     const prev = () => {
         setDirection(-1);
@@ -24,7 +34,7 @@ function ImageSlider({ type, id, city }) {
 
     const next = () => {
         setDirection(1);
-        setCurrent((c) => (c === images .length - 1 ? 0 : c + 1));
+        setCurrent((c) => (c === images.length - 1 ? 0 : c + 1));
     };
 
     if (loading || images.length === 0) {
@@ -41,7 +51,7 @@ function ImageSlider({ type, id, city }) {
             <AnimatePresence initial={false} custom={direction}>
                 <motion.img
                     key={current}
-                    src={images[current]}
+                    src={images[current] || ''}
                     alt={`Property image ${current + 1}`}
                     custom={direction}
                     variants={{
@@ -104,22 +114,42 @@ function PropertyDetail() {
     const [similar, setSimilar] = useState([]);
 
     useEffect(() => {
-        // Check hardcoded + admin properties
-        const adminProperties = JSON.parse(localStorage.getItem('adminProperties') || '[]');
-        const allProperties = [...properties, ...adminProperties];
+    const loadProperty = async () => {
+        try {
+        const { data: supabaseData, error } = await supabase
+            .from('properties')
+            .select('*');
 
-        const found = allProperties.find((p) => p.id === parseInt(id));
+        if (error) {
+            console.error('Supabase error:', error);
+            return;
+        }
+
+        const normalized = (supabaseData || []).map((p) => ({
+            ...p,
+            stateCode: p.state_code,
+            zipCode: p.zip_code,
+            agentId: p.agent_id,
+        }));
+
+        const allProperties = [...properties, ...normalized];
+        const found = allProperties.find((p) => String(p.id) === String(id));
+
         if (found) {
             setProperty(found);
-            // Find agent
             const foundAgent = agents.find((a) => a.id === found.agentId);
             setAgent(foundAgent);
-            // Find similar properties (same type, different id)
             const similarProps = allProperties
-                .filter((p) => p.type === found.type && p.id !== found.id)
-                .slice(0, 3);
+            .filter((p) => p.type === found.type && p.id !== found.id)
+            .slice(0, 3);
             setSimilar(similarProps);
         }
+        } catch (err) {
+        console.error('Load property error:', err);
+        }
+    };
+
+    loadProperty();
     }, [id]);
 
     if (!property) {
@@ -138,6 +168,7 @@ function PropertyDetail() {
         );
     }
 
+
     const typeColors = {
         'Studio': {bg: '#e8f5ee', text: '#2eac76' },
         '1 Bedroom': {bg: '#e8f0fb', text: '#2d7dd2' },
@@ -146,6 +177,14 @@ function PropertyDetail() {
     const color = typeColors[property.type] || typeColors['Studio'];
 
     return (
+        <>
+        <SEO
+            title={`${property.title} in ${property.city}, ${property.stateCode}`}
+            description={`${property.type} apartment in ${property.city}, ${property.state}. $${property.price?.toLocaleString()}/mo. ${property.sqft} sqft. ${property.description}`}
+            image={property.images?.[0] || '/logo.png'}
+            url={`https://homepointproperties.com/properties/${property.id}`}
+            type="article"
+        />
         <div 
             className="min-h-screen pt-24 pb-16 px-4"
             style={{ backgroundColor: '#f8fafc' }}
@@ -183,6 +222,7 @@ function PropertyDetail() {
                                 type={property.type}
                                 id={property.id}
                                 city={property.city}
+                                uploadedImages={property.images}
                             />
                         </motion.div>
 
@@ -224,7 +264,7 @@ function PropertyDetail() {
                                         className="text-3xl font-bold"
                                         style={{ color: '#2eac76' }}
                                     >
-                                        ${property.price.toLocaleString()}
+                                        ${(property.price || 0).toLocaleString()}
                                     </p>
                                     <p className="text-gray-400 text-sm">per month</p>
                                 </div>
@@ -460,6 +500,7 @@ function PropertyDetail() {
                 )}
             </div>
         </div>
+        </>
     );
 }
 

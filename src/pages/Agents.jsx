@@ -6,6 +6,7 @@ import { HiOutlineEnvelope } from "react-icons/hi2";
 import { MdVerified } from "react-icons/md";
 import { FaStar } from "react-icons/fa";
 import agents from '../data/agents';
+import SEO from '../components/SEO';
 
 const fadeUp = {
     hidden: {opacity: 0, y: 30 },
@@ -136,6 +137,7 @@ function AgentCard({ agent, index }) {
 }
 
 function Agents() {
+
     const [search, setSearch] = useState('');
 
     const filtered = agents.filter((a) =>
@@ -145,6 +147,12 @@ function Agents() {
     );
 
     return (
+        <>
+        <SEO
+            title="Our Expert Agents | HomePoint Properties"
+            description="Meet our team of experienced real estate agents across the United States. Ready to help you find your perfect apartment."
+            url="https://homepointproperties.com/agents"
+        />
         <div
             className="min-h-screen pt-24 pb-16 px-4"
             style={{ backgroundColor: '#f8fafc' }}
@@ -245,6 +253,7 @@ function Agents() {
                 )}
             </div>
         </div>
+        </>
     );
 }
 

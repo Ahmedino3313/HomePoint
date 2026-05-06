@@ -56,7 +56,16 @@ function LazyImage({src, alt }) {
 }
 
 function PropertyCard({ property }) {
-    const { images, loading } = usePropertyImages(property.type, property.id, property.city, property.state);
+    const hasImages = property.images && property.images.length > 0;
+    const { images: fetchedImages, loading } = usePropertyImages(
+        hasImages ? null : property.type,
+        property.id,
+        property.city,
+        property.state
+    );
+    const images = hasImages ? property.images : fetchedImages;
+    const loading2 = hasImages ? false : loading;
+
     const [saved, setSaved] = useState(false);
 
     const typeColors = {
@@ -78,7 +87,7 @@ function PropertyCard({ property }) {
         >
             {/* Image */}
             <div className="relative h-52 overflow-hidden">
-                {loading || !images[0] ? (
+                {loading2 || !images[0] ? (
                     <div
                         className="w-full h-full animate-pulse"
                         style={{ backgroundColor: '#e8f5ee' }}

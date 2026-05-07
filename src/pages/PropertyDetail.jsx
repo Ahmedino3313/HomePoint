@@ -182,7 +182,7 @@ function PropertyDetail() {
             title={`${property.title} in ${property.city}, ${property.stateCode}`}
             description={`${property.type} apartment in ${property.city}, ${property.state}. $${property.price?.toLocaleString()}/mo. ${property.sqft} sqft. ${property.description}`}
             image={property.images?.[0] || '/logo.png'}
-            url={`https://homepointproperties.com/properties/${property.id}`}
+            url={`https://home-point-three.vercel.app/properties/${property.id}`}
             type="article"
         />
         <div 

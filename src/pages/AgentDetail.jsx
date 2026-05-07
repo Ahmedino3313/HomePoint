@@ -69,7 +69,7 @@ function AgentDetail() {
         <SEO
             title={`${agent.name} | HomePoint Properties Agent`}
             description={`${agent.name} - ${agent.title}. ${agent.experience} years experience. ${agent.listings} listings across ${agent.states.join(', ')}.`}
-            url={`https://homepointproperties.com/agents/${agent.id}`}
+            url={`https://home-point-green.vercel.app/agents/${agent.id}`}
         />
         <div
             className="min-h-screen pt-24 pb-16 px-4"

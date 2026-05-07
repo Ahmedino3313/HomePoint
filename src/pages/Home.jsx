@@ -114,7 +114,7 @@ function Home() {
         <SEO
             title="HomePoint Properties | Find a Place You'll Love"
             description="Discover studio, one bedroom, and two bedroom apartments across all 50 US states. Trusted by thousands of families across America."
-            url="https://homepointproperties.com"
+            url="https://home-point-green.vercel.app/"
         />
         <div className="bg-white">
             {/* Hero Section */}

@@ -132,7 +132,7 @@ function Properties() {
         <SEO
             title="Browse Properties | HomePoint Properties"
             description="Search through hundreds of studio, one bedroom and two bedroom apartments across all 50 US states. Filter by state, type and price."
-            url="https://homepointproperties.com/properties"
+            url="https://home-point-green.vercel.app/properties"
         />
         <div
             className="min-h-screen pt-24 pb-16 px-4"

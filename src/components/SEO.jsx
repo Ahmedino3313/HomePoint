@@ -3,8 +3,8 @@ import { Helmet } from 'react-helmet-async';
 function SEO({
     title = 'HomePoint Properties | Find a Place You\'ll Love',
     description = 'Discover studio, one bedroom, and two bedroom apartments across all 50 US states. Trusted by thousands of families. Find your perfect home with HomePoint Properties.',
-    image = '/logo1.png',
-    url = 'https://homepointproperties.com',
+    image = 'https://home-point-green.vercel.app/logo1.png',
+    url = 'https://home-point-green.vercel.app/',
     type = 'website',
     }) {
     const fullTitle = title.includes('HomePoint') ? title : `${title} | HomePoint Properties`;
@@ -26,6 +26,8 @@ function SEO({
         <meta property="og:title" content={fullTitle} />
         <meta property="og:description" content={description} />
         <meta property="og:image" content={image} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
         <meta property="og:site_name" content="HomePoint Properties" />
         <meta property="og:locale" content="en_US" />
 

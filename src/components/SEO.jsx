@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet-async';
 function SEO({
     title = 'HomePoint Properties | Find a Place You\'ll Love',
     description = 'Discover studio, one bedroom, and two bedroom apartments across all 50 US states. Trusted by thousands of families. Find your perfect home with HomePoint Properties.',
-    image = 'https://home-point-green.vercel.app/logo1.png',
+    image = 'https://home-point-green.vercel.app/preview.jpeg',
     url = 'https://home-point-green.vercel.app/',
     type = 'website',
     }) {

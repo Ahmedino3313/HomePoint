@@ -151,7 +151,7 @@ function Agents() {
         <SEO
             title="Our Expert Agents | HomePoint Properties"
             description="Meet our team of experienced real estate agents across the United States. Ready to help you find your perfect apartment."
-            url="https://home-point-three.vercel.app/agents"
+            url="https://homepointproperties.com/agents"
         />
         <div
             className="min-h-screen pt-24 pb-16 px-4"

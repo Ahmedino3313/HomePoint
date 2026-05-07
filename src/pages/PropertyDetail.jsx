@@ -181,7 +181,7 @@ function PropertyDetail() {
         <SEO
             title={`${property.title} in ${property.city}, ${property.stateCode}`}
             description={`${property.type} apartment in ${property.city}, ${property.state}. $${property.price?.toLocaleString()}/mo. ${property.sqft} sqft. ${property.description}`}
-            image={property.images?.[0] || '/logo.png'}
+            image={property.images?.[0] || '/logo1.png'}
             url={`https://homepointproperties.com/properties/${property.id}`}
             type="article"
         />

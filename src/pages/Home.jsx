@@ -215,10 +215,10 @@ function Home() {
                 <div className="max-w-7xl mx-auto px-4">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
                         {[
-                            { icon: <BsBuilding size={32} />, target: 500, suffix: '+', label: 'Properties Listed' },
+                            { icon: <BsBuilding size={32} />, target: 750, suffix: '+', label: 'Properties Listed' },
                             { icon: <HiLocationMarker size={32} />, target: 50, suffix: '', label: 'States Covered' },
-                            { icon: <BsPeopleFill size={32} />, target: 10, suffix: '+', label: 'Expert Agents' },
-                            { icon: <FaHandshake size={32} />, target: 1200, suffix: '+', label: 'Happy Clients' },
+                            { icon: <BsPeopleFill size={32} />, target: 20, suffix: '+', label: 'Expert Agents' },
+                            { icon: <FaHandshake size={32} />, target: 1700, suffix: '+', label: 'Happy Clients' },
                         ].map((stat, i) => (
                             <motion.div
                                 key={i}

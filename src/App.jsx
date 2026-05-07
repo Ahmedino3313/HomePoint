@@ -10,6 +10,7 @@ import AdminDashboard from './pages/AdminDashboard';
 import Contact from './pages/Contact';
 import ScrollToTop from './components/ScrollToTop';
 import NotFound from "./pages/NotFound";
+import About from './pages/About';
 
 function App() {
   return (
@@ -22,8 +23,9 @@ function App() {
         <Route path="/properties/:id" element={<PropertyDetail />} />
         <Route path="/agents" element={<Agents />} />
         <Route path="/agents/:id" element={<AgentDetail />} />
-        <Route path="/admin" element={<AdminDashboard />} />
+        <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/admin" element={<AdminDashboard />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
       <Footer />

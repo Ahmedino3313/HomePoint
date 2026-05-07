@@ -19,7 +19,7 @@ function Footer() {
                     <div>
                         <Link to="/" className="flex items-center gap-3 mb-4">
                             <img 
-                                src="/logo.png"
+                                src="/logo1.png"
                                 alt="HomePoint Properties"
                                 className="h-12 w-12 object-contain rounded-full" 
                             />
@@ -60,6 +60,7 @@ function Footer() {
                                 { name: 'Home', path: '/'},
                                 { name: 'Properties', path: '/properties'},
                                 { name: 'Our Agents', path: '/agents'},
+                                { name: 'About Us', path: '/about'},
                                 { name: 'Contact Us', path: '/contact'},
                             ].map((link) => (
                                 <li key={link.name}>

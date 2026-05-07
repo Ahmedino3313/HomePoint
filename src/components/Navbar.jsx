@@ -26,6 +26,7 @@ function Navbar() {
     const navLinks = [
         { name: 'Home', path: '/' },
         { name: 'Properties', path: '/properties' },
+        { name: 'About Us', path: '/about' },
         { name: 'Agents', path: '/agents' },
         { name: 'Contact', path: '/contact'},
     ]
@@ -44,7 +45,7 @@ function Navbar() {
                     {/* Logo + Name */}
                     <Link to="/" className="flex items-center gap-3">
                         <img 
-                            src="/logo.png"
+                            src="/logo1.png"
                             alt="HomePoint Properties"
                             className="h-12 w-12 object-contain rounded-full"
                         />
@@ -56,7 +57,7 @@ function Navbar() {
                         </span>
                     </Link>
 
-                    {/* Dexktop Links */}
+                    {/* Desktop Links */}
                     <div className="hidden md:flex items-center gap-8">
                         {navLinks.map((link) => (
                             <Link

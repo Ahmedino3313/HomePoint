@@ -9,6 +9,7 @@ import agents from '../data/agents';
 import properties from '../data/properties';
 import PropertyCard from '../components/PropertyCard';
 import SEO from '../components/SEO';
+import { supabase } from '../lib/supabase';
 
 const fadeUp = {
     hidden: { opacity: 0, y: 30 },
@@ -21,14 +22,30 @@ function AgentDetail() {
     const [agentProperties, setAgentProperties] = useState([]);
 
     useEffect(() => {
-        const found = agents.find((a) => a.id === parseInt(id));
-        if (found) {
+        const loadAgent = async () => {
+            const found = agents.find((a) => a.id === parseInt(id));
+            if (found) {
             setAgent(found);
-            const adminProperties = JSON.parse(localStorage.getItem('adminProperties') || '[]');
-            const allProperties = [...properties, ...adminProperties];
+
+            // Fetch from Supabase
+            const { data: supabaseData } = await supabase
+                .from('properties')
+                .select('*');
+
+            const normalized = (supabaseData || []).map((p) => ({
+                ...p,
+                stateCode: p.state_code,
+                zipCode: p.zip_code,
+                agentId: p.agent_id,
+            }));
+
+            const allProperties = [...properties, ...normalized];
             const agentProps = allProperties.filter((p) => p.agentId === found.id);
             setAgentProperties(agentProps);
-        }
+            }
+        };
+
+        loadAgent();
     }, [id]);
 
     if (!agent) {

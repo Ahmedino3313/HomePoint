@@ -263,7 +263,7 @@ function AdminDashboard() {
                     {/* Logo */}
                     <div className="text-center mb-8">
                         <img 
-                            src="/logo.png"
+                            src="/logo1.png"
                             alt="HomePoint"
                             className="w-16 h-16 object-contain rounded-full mx-auto mb-4"
                         />
@@ -350,7 +350,7 @@ function AdminDashboard() {
                 >
                     <div className="flex items-center gap-4">
                         <img 
-                            src="/logo.png"
+                            src="/logo1.png"
                             alt="HomePoint"
                             className="w-12 h-12 object-contain rounded-full"
                         />

@@ -192,7 +192,7 @@ function AgentDetail() {
                             >
                                 About {agent.name}
                             </h2>
-                            <p className="text-gray-500 leading-relaxed">{agent.bio}</p>
+                            <p className="text-gray-500 leading-relaxed text-justify">{agent.bio}</p>
                         </div>
 
                         {/* Contact Info */}

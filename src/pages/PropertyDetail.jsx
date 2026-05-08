@@ -312,7 +312,7 @@ function PropertyDetail() {
                                 >
                                     About This Property
                                 </h3>
-                                <p className="text-gray-500 leading-relaxed">
+                                <p className="text-gray-500 leading-relaxed text-justify">
                                     {property.description}
                                 </p>
                             </div>
@@ -424,7 +424,7 @@ function PropertyDetail() {
                                     </div>
 
                                     {/* Bio */}
-                                    <p className="text-gray-500 text-sm leading-relaxed mb-5">
+                                    <p className="text-gray-500 text-sm leading-relaxed mb-5 text-justify">
                                         {agent.bio}
                                     </p>
 

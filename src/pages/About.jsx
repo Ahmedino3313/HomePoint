@@ -28,7 +28,7 @@ function About() {
         <SEO
             title="About Us | HomePoint Properties"
             description="Learn about HomePoint Properties — our story, mission, values and the team behind America's trusted real estate platform across all 50 states."
-            url="https://home-point-green.vercel.app/about"
+            url="https://homepointproperties.info/about"
         />
 
         <div className="bg-white">

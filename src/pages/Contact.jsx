@@ -66,7 +66,7 @@ function Contact() {
         <SEO
             title="Contact Us | HomePoint Properties"
             description="Get in touch with HomePoint Properties. We're here to help you find your perfect apartment across all 50 US states."
-            url="https://home-point-green.vercel.app/contact"
+            url="https://homepointproperties.info/contact"
         />
         <div 
             className="min-h-screen pt-24 pb-16 px-4"

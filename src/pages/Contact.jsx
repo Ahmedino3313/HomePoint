@@ -117,11 +117,11 @@ function Contact() {
                             {
                                 icon: <HiMail size={22} />,
                                 title: 'Email',
-                                value: 'info@homepointproperties.com',
+                                value: 'support@homepointproperties.info',
                                 sub: 'We reply within 24 hours',
                                 bg: '#e8f0fb',
                                 color: '#2d7dd2',
-                                href: 'mailto:info@homepointproperties.com',
+                                href: 'mailto:support@homepointproperties.info',
                             },
                             {
                                 icon: <HiLocationMarker size={22} />,

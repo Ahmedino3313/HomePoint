@@ -120,8 +120,8 @@ function Footer() {
                             </li>
                             <li className="flex items-start gap-3">
                                 <HiMail size={18} style={{ color: '#2eac76' }} className="shrink-0" />
-                                <a href="mailto:info@homepointproperties.com" className="text-gray-400 text-sm hover:text-white transition-all duration-300">
-                                    info@homepointproperties.com
+                                <a href="mailto:support@homepointproperties.info" className="text-gray-400 text-sm hover:text-white transition-all duration-300">
+                                    support@homepointproperties.info
                                 </a>
                             </li>
                         </ul>

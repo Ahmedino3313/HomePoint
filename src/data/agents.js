@@ -4,7 +4,7 @@ const agents = [
         name: 'Pamela Sue',
         title: 'Booking Manager',
         phone: '+1 (404) 388-4727',
-        email: 'pamela.sue@homepointproperties.com',
+        email: 'support@homepointproperties.info',
         photo: '/images/agents/agent1.jpeg',
         states: ['Texas', 'New York', 'Oklahoma', 'Maine', 'New Hampshire', 'California', 'Montana', 'Pennsylvania'],
         listings: 61,
@@ -179,7 +179,18 @@ const agents = [
         experience: 9,
         bio: 'Michael Havey is an experienced real estate professional dedicated to helping clients find quality homes and apartments in convenient and desirable locations. He has extensive knowledge of the rental market and takes pride in offering reliable advice and personalized support throughout the leasing process. Michaelis recognized for his professionalism, strong work ethic, and ability to build lasting relationships with clients. His customer-focused approach allows him to understand individual preferences and deliver housing solutions that meet both lifestyle and budget expectations.',
     },
-    
+    {
+        id: 16,
+        name: 'Gustavo Masarieg',
+        title: 'Senior Leasing Consultant',
+        phone: '+1 (318) 406-9560',
+        email: 'gustavo.masarieg@homepointproperties.com',
+        photo: '/images/agents/agent16.jpeg',
+        states: ['California', 'Oregon', 'Washington', 'Colorado', 'Nevada', 'Arizona'],
+        listings: 51,
+        experience: 11,
+        bio: 'Gustavo Masarieg is a dedicated real estate professional with over a decade of experience helping clients find apartments and rental homes that suit their needs. He is known for his market expertise, transparent communication, and commitment to delivering an exceptional leasing experience. Gustavo works closely with every client to understand their priorities, offering personalized recommendations and dependable guidance from the initial search through move-in. His attention to detail and client-first approach have earned him a reputation as a trusted housing solutions consultant.'
+    },
 ];
 
 export default agents;

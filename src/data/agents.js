@@ -1,7 +1,7 @@
 const agents = [
     {
         id: 1,
-        name: 'Pamela Sue',
+        name: 'Maegan Essary',
         title: 'Booking Manager',
         phone: '+1 (404) 388-4727',
         email: 'support@homepointproperties.info',
@@ -9,7 +9,7 @@ const agents = [
         states: ['Texas', 'New York', 'Oklahoma', 'Maine', 'New Hampshire', 'California', 'Montana', 'Pennsylvania'],
         listings: 61,
         experience: 13,
-        bio: 'Pamela Sue is an experienced Booking Manager with a strong background in client relations, reservation coordination, and property scheduling. She is responsible for managing booking inquiries, confirming reservations, coordinating move-in schedules, and ensuring smooth communication between clients and management. With exceptional organizational skills and attention to detail, Pamela is committed to providing a seamless and professional booking experience for every client. She specializes in handling apartment reservations, short-term and long-term rental arrangements, and customer support services. Known for her reliability, prompt responses, and professional approach, Pamela works diligently to ensure every booking process is handled efficiently from inquiry to confirmation. Her goal is to create a stress-free experience while maintaining high standards of customer satisfaction and operational excellence',
+        bio: 'Maegan Essary is an experienced Booking Manager with a strong background in client relations, reservation coordination, and property scheduling. She is responsible for managing booking inquiries, confirming reservations, coordinating move-in schedules, and ensuring smooth communication between clients and management. With exceptional organizational skills and attention to detail, Pamela is committed to providing a seamless and professional booking experience for every client. She specializes in handling apartment reservations, short-term and long-term rental arrangements, and customer support services. Known for her reliability, prompt responses, and professional approach, Pamela works diligently to ensure every booking process is handled efficiently from inquiry to confirmation. Her goal is to create a stress-free experience while maintaining high standards of customer satisfaction and operational excellence',
     },
     {
         id:2,
@@ -109,7 +109,7 @@ const agents = [
     },
     {
         id: 9,
-        name: 'Maegan Essary',
+        name: 'Pamela Sue',
         title: 'Rental Housing Coordinator',
         phone: '+1 (312) 895-0156',
         email: 'essary.m@homepointproperties.com',
@@ -117,7 +117,7 @@ const agents = [
         states: ['Illinois', 'Florida', 'Michigan', 'Louisiana', 'Kansas', 'Indiana', 'Ohio'],
         listings: 56,
         experience: 11,
-        bio: 'Maegan Essary is a dedicated and client-focused real estate agent with a passion for helping people find comfortable and welcoming homes. She has extensive experience in apartment leasing, tenant relations, and property coordination. Maegan is recognized for her professionalism, reliability, and attention to detail, ensuring that every client receives quality service and personalized support. She enjoys working closely with renters and homeowners to understand their preferences and recommend properties that match their goals.',
+        bio: 'Pamela Sue is a dedicated and client-focused real estate agent with a passion for helping people find comfortable and welcoming homes. She has extensive experience in apartment leasing, tenant relations, and property coordination. Maegan is recognized for her professionalism, reliability, and attention to detail, ensuring that every client receives quality service and personalized support. She enjoys working closely with renters and homeowners to understand their preferences and recommend properties that match their goals.',
     },
     {
         id: 11,

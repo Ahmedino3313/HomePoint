@@ -112,7 +112,7 @@ const agents = [
         name: 'Pamela Sue',
         title: 'Rental Housing Coordinator',
         phone: '+1 (312) 895-0156',
-        email: 'essary.m@homepointproperties.com',
+        email: 'support@homepointproperties.info',
         photo: '/images/agents/agent10.jpg',
         states: ['Illinois', 'Florida', 'Michigan', 'Louisiana', 'Kansas', 'Indiana', 'Ohio'],
         listings: 56,

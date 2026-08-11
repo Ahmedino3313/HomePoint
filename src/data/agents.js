@@ -202,7 +202,19 @@ const agents = [
         listings: 19,
         experience: 5,
         bio: 'Heather Buckle is an experienced leasing consultant committed to helping clients find apartments and rental homes that fit their lifestyle, budget, and long-term goals. With extensive knowledge of regional rental markets, she provides personalized recommendations, honest guidance, and responsive support throughout every step of the leasing process. Heather is recognized for her professionalism, attention to detail, and dedication to delivering a seamless and stress-free rental experience, making her a trusted advisor for both first-time renters and returning clients.'
-    }
+    },
+    // {
+    //     id: 18,
+    //     name: 'Julia Stein',
+    //     title: 'Leasing & Property Consultant',
+    //     phone: '+1 (724) 218-2211',
+    //     email: 'juliastein2218@gmail.com',
+    //     photo: '/images/agents/agent18.jpeg',
+    //     states: ['New Jersey', 'New York', 'Pennsylvania', 'Connecticut', 'Massachusetts', 'Delaware'],
+    //     listings: 22,
+    //     experience: 6,
+    //     bio: 'Julia Stein is a dedicated senior leasing consultant with a strong understanding of residential rental markets and a passion for helping clients find the right place to call home. She works closely with renters to understand their preferences, budget, and housing needs, providing tailored recommendations and reliable guidance throughout the leasing process. Known for her professionalism, communication, and attention to detail, Julia is committed to making every rental experience smooth, transparent, and stress-free.'
+    // }
 ];
 
 export default agents;

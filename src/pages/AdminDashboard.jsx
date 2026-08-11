@@ -23,7 +23,7 @@ const US_STATES = [
     'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon',
     'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota',
     'Tennessee', 'Texas', 'Utah', 'Vermont', 'Virginia', 'Washington',
-    'West Virginia', 'Wisconsin', 'Wyoming', 'Ontario',
+    'West Virginia', 'Wisconsin', 'Wyoming', 'Ontario', 'Newfoundland and Labrador',
 ];
 
 const STATE_CODES = {
@@ -40,7 +40,7 @@ const STATE_CODES = {
     'Pennsylvania': 'PA', 'Rhode Island': 'RI', 'South Carolina': 'SC',
     'South Dakota': 'SD', 'Tennessee': 'TN', 'Texas': 'TX', 'Utah': 'UT',
     'Vermont': 'VT', 'Virginia': 'VA', 'Washington': 'WA',
-    'West Virginia': 'WV', 'Wisconsin': 'WI', 'Wyoming': 'WY', 'Ontario': 'ON',
+    'West Virginia': 'WV', 'Wisconsin': 'WI', 'Wyoming': 'WY', 'Ontario': 'ON', 'Newfoundland and Labrador': 'NL',
 };
 
 function AdminDashboard() {

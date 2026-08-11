@@ -121,10 +121,10 @@ const agents = [
     },
     {
         id: 11,
-        name: 'Sandra Melanin',
+        name: 'Perpetual Mitchell',
         title: 'Commercial & Residential Agent',
         phone: '+1 (617) 555-0110',
-        email: 'sandra.m@homepointproperties.com',
+        email: 'support@homepointproperties.info',
         photo: '/images/agents/agent11.jpeg',
         states: ['Massachusetts', 'Maryland', 'Arizona', 'Rhode Island', 'Maine', 'New Hampshire', 'Vermont'],
         listings: 12,
